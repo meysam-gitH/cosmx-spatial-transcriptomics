@@ -1,0 +1,16 @@
+# Raw/intermediate data: large, externally sourced, reproducible via
+# scripts/download_and_subset_data.sh -- not committed.
+data/
+
+# Vendored R package sources: reproducible via scripts/install_dependencies.sh
+vendor/*/
+!vendor/.gitkeep
+
+# R session/build artifacts
+.Rhistory
+.RData
+.Rproj.user/
+*.Rout
+NBClust-Plots/
+
+logs/*.log
