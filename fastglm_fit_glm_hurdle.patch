@@ -1,0 +1,71 @@
+diff --git a/src/fit_glm_hurdle.cpp b/src/fit_glm_hurdle.cpp
+index 9ddfaa1..958da02 100644
+--- a/src/fit_glm_hurdle.cpp
++++ b/src/fit_glm_hurdle.cpp
+@@ -192,33 +192,37 @@ List fit_glm_hurdle(
+     const int    df_count     = (int)p_c + ((dist_code == 1) ? 1 : 0);
+     const int    df           = df_count + (int)p_z;
+ 
+-    return List::create(
+-        _["coefficients_count"]   = count_res.beta,
+-        _["coefficients_zero"]    = beta_zero,
+-        _["se_count"]             = count_res.se,
+-        _["se_zero"]              = se_zero,
+-        _["vcov_count"]           = count_res.vcov,
+-        _["vcov_zero"]            = vcov_zero,
+-        _["lambda"]               = count_res.lambda,        // count-part rate, on the y>0 subset
+-        _["mu_count_truncated"]   = count_res.mu_T,           // E[Y | Y>0] on the y>0 subset
+-        _["eta_count"]            = count_res.eta,
+-        _["mu_zero"]              = mu_zero,
+-        _["eta_zero"]             = eta_zero,
+-        _["theta"]                = theta_hat,
+-        _["SE.theta"]             = se_theta,
+-        _["loglik"]               = loglik_total,
+-        _["loglik_zero"]          = loglik_zero,
+-        _["loglik_count"]         = count_res.loglik,
+-        _["dev_zero"]             = dev_zero,
+-        _["iter_count"]           = count_res.iter,
+-        _["iter_zero"]            = zero_iter,
+-        _["outer_iter"]           = outer_iter,
+-        _["theta_iter"]           = theta_iter,
+-        _["converged"]            = (count_conv && zero_conv),
+-        _["dist_code"]            = dist_code,
+-        _["zero_fam_code"]        = zero_fam_code,
+-        _["n"]                    = (int)n,
+-        _["n_positive"]           = n_pos,
+-        _["df"]                   = df
+-    );
++    // Built incrementally (rather than via a single List::create(...) call)
++    // because this result has more named elements than Rcpp's List::create
++    // variadic overload set supports (max 20 as of the Rcpp version this
++    // was compiled against).
++    List out;
++    out["coefficients_count"] = count_res.beta;
++    out["coefficients_zero"]  = beta_zero;
++    out["se_count"]           = count_res.se;
++    out["se_zero"]            = se_zero;
++    out["vcov_count"]         = count_res.vcov;
++    out["vcov_zero"]          = vcov_zero;
++    out["lambda"]             = count_res.lambda;        // count-part rate, on the y>0 subset
++    out["mu_count_truncated"] = count_res.mu_T;           // E[Y | Y>0] on the y>0 subset
++    out["eta_count"]          = count_res.eta;
++    out["mu_zero"]            = mu_zero;
++    out["eta_zero"]           = eta_zero;
++    out["theta"]              = theta_hat;
++    out["SE.theta"]           = se_theta;
++    out["loglik"]             = loglik_total;
++    out["loglik_zero"]        = loglik_zero;
++    out["loglik_count"]       = count_res.loglik;
++    out["dev_zero"]           = dev_zero;
++    out["iter_count"]         = count_res.iter;
++    out["iter_zero"]          = zero_iter;
++    out["outer_iter"]         = outer_iter;
++    out["theta_iter"]         = theta_iter;
++    out["converged"]          = (count_conv && zero_conv);
++    out["dist_code"]          = dist_code;
++    out["zero_fam_code"]      = zero_fam_code;
++    out["n"]                  = (int)n;
++    out["n_positive"]         = n_pos;
++    out["df"]                 = df;
++    return out;
+ }
